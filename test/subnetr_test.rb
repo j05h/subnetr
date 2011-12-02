@@ -52,5 +52,21 @@ describe Subnetr do
     it "can convert /1 cider to binary" do
       must_cidr_to_binary 1, '11111111.00000000.00000000.00000000'
     end
+
+    it "can convert /32 to hosts" do
+      @s.cidr_to_hosts('/32').must_equal 1
+    end
+
+    it "can convert /30 to hosts" do
+      @s.cidr_to_hosts('/30').must_equal 2
+    end
+
+    it "can convert /24 hosts" do
+      @s.cidr_to_hosts('/24').must_equal 254
+    end
+
+    it "can convert /8 hosts" do
+      @s.cidr_to_hosts('/8').must_equal 16777214
+    end
   end
 end
