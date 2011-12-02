@@ -22,9 +22,17 @@ module Subnetr
 
     private
     def normalize cidr
-      cidr = cidr.gsub(/\W/, '').to_i if cidr.respond_to?('gsub')
-      cidr < 8 ? 8 : cidr
+      cidr = cidr.split('/').last.to_i if cidr.respond_to?('split')
+      if 8 > cidr || cidr > 32
+        raise InvalidCIDRException.new "#{cidr} is an invalid CIDR address"
+      else
+        cidr
+      end
     end
+
+  end
+
+  class InvalidCIDRException < Exception
 
   end
 end
