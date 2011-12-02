@@ -3,8 +3,15 @@ require 'minitest/autorun'
 require 'lib/subnetr'
 
 describe Subnetr do
+
   before do
     @s = Subnetr::Calc.new
+  end
+
+  describe "/32" do
+    before do
+      @s = Subnetr::Calc.new "192.168.0.1/32"
+    end
   end
 
   def must_cidr_to_binary cidr, binary

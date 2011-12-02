@@ -2,6 +2,13 @@ require "subnetr/version"
 
 module Subnetr
   class Calc
+    attr_reader :cidr, :netmask, :binary_netmask, :hosts
+    def initialize cidr
+      @cidr           = cidr
+      @netmask        = cidr_to_netmask cidr
+      @binary_netmask = cidr_to_binary cidr
+      @hosts          = cidr_to_hosts cidr
+    end
 
     def cidr_to_netmask cidr
       binary = cidr_to_binary cidr
