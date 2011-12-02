@@ -9,12 +9,18 @@ module Subnetr
       return unless cidr
       @cidr            = cidr
       @ip_address      = cidr.split('/').first
-      @netmask         = cidr_to_netmask cidr
-      @wildcard        = to_dec cidr_to_wildcard(cidr)
       @binary_netmask  = cidr_to_binary cidr
       @binary_wildcard = cidr_to_wildcard cidr
       @hosts           = cidr_to_hosts cidr
       @ip_range        = generate_ip_range
+    end
+
+    def netmask
+      to_dec binary_netmask
+    end
+
+    def wildcard
+      to_dec binary_wildcard
     end
 
     def generate_ip_range
