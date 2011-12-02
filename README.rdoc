@@ -1,0 +1,8 @@
+= subnetr
+
+subnetr helps you generate information about subnets from CIDR addresses.
+
+I'll eventually have a CLI, but for now its just a class. I'm mostly doing this to learn about how subnets work.
+
+
+http://www.dialogic.com/support/helpweb/safepipe/SP/courses/ip/index.htm
