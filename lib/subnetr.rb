@@ -2,13 +2,26 @@ require "subnetr/version"
 
 module Subnetr
   class Calc
-    attr_reader :cidr, :netmask, :binary_netmask, :hosts
+    attr_reader :cidr, :ip_address, :ip_range, :netmask, :binary_netmask, :hosts
     def initialize cidr = nil
       return unless cidr
       @cidr           = cidr
+      @ip_address     = cidr.split('/').first
       @netmask        = cidr_to_netmask cidr
       @binary_netmask = cidr_to_binary cidr
       @hosts          = cidr_to_hosts cidr
+      @ip_range       = generate_ip_range
+    end
+
+    def generate_ip_range
+      a, b, c, d = ip_address.split('.')
+
+      d = d.to_i
+      ip_range = []
+      hosts.times do |h|
+        ip_range << "#{a}.#{b}.#{c}.#{d+h}"
+      end
+      ip_range
     end
 
     def cidr_to_netmask cidr

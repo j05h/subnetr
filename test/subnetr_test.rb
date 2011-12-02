@@ -24,6 +24,67 @@ describe Subnetr do
     it "has a valid number of hosts" do
       @s.hosts.must_equal 1
     end
+
+    it "has a starting ip" do
+      @s.ip_address.must_equal "192.168.0.1"
+    end
+
+    it "has a proper ip range" do
+      @s.ip_range.must_equal ["192.168.0.1"]
+    end
+  end
+
+  describe "slash 30" do
+    before do
+      @s = Subnetr::Calc.new "192.168.0.1/30"
+    end
+
+    it "has a valid binary subnet mask" do
+      @s.binary_netmask.must_equal '11111111.11111111.11111111.11111100'
+    end
+
+    it "has a valid subnet mask" do
+      @s.netmask.must_equal '255.255.255.252'
+    end
+
+    it "has a valid number of hosts" do
+      @s.hosts.must_equal 2
+    end
+
+    it "has a starting ip" do
+      @s.ip_address.must_equal "192.168.0.1"
+    end
+
+    it "has a proper ip range" do
+      @s.ip_range.must_equal ["192.168.0.1", "192.168.0.2"]
+    end
+  end
+
+
+  describe "slash 28" do
+    before do
+      @s = Subnetr::Calc.new "192.168.0.1/28"
+    end
+
+    it "has a valid binary subnet mask" do
+      @s.binary_netmask.must_equal '11111111.11111111.11111111.11110000'
+    end
+
+    it "has a valid subnet mask" do
+      @s.netmask.must_equal '255.255.255.240'
+    end
+
+    it "has a valid number of hosts" do
+      @s.hosts.must_equal 14
+    end
+
+    it "has a starting ip" do
+      @s.ip_address.must_equal "192.168.0.1"
+    end
+
+    it "has a proper ip range" do
+      @s.ip_range.must_equal ["192.168.0.1", "192.168.0.2", "192.168.0.3", "192.168.0.4", "192.168.0.5", "192.168.0.6", "192.168.0.7", "192.168.0.8", "192.168.0.9", "192.168.0.10", "192.168.0.11", "192.168.0.12", "192.168.0.13", "192.168.0.14"]
+    end
   end
 
   def must_cidr_to_binary cidr, binary
@@ -39,10 +100,6 @@ describe Subnetr do
     it "must raise an exception on bad cidr" do
       lambda do
         @s.cidr_to_netmask('/33')
-      end.must_raise(Subnetr::InvalidCIDRException)
-
-      lambda do
-        @s.cidr_to_netmask('/31')
       end.must_raise(Subnetr::InvalidCIDRException)
 
       lambda do
