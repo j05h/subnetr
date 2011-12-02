@@ -2,15 +2,19 @@ require "subnetr/version"
 
 module Subnetr
   class Calc
-    attr_reader :cidr, :ip_address, :ip_range, :netmask, :binary_netmask, :hosts
+    attr_reader :cidr, :ip_address, :ip_range, :hosts,
+      :netmask, :binary_netmask,
+      :wildcard, :binary_wildcard
     def initialize cidr = nil
       return unless cidr
-      @cidr           = cidr
-      @ip_address     = cidr.split('/').first
-      @netmask        = cidr_to_netmask cidr
-      @binary_netmask = cidr_to_binary cidr
-      @hosts          = cidr_to_hosts cidr
-      @ip_range       = generate_ip_range
+      @cidr            = cidr
+      @ip_address      = cidr.split('/').first
+      @netmask         = cidr_to_netmask cidr
+      @wildcard        = to_dec cidr_to_wildcard(cidr)
+      @binary_netmask  = cidr_to_binary cidr
+      @binary_wildcard = cidr_to_wildcard cidr
+      @hosts           = cidr_to_hosts cidr
+      @ip_range        = generate_ip_range
     end
 
     def generate_ip_range
@@ -25,35 +29,41 @@ module Subnetr
     end
 
     def cidr_to_netmask cidr
-      binary = cidr_to_binary cidr
+      to_dec cidr_to_binary(cidr)
+    end
+
+    def to_dec binary
       binary.split('.').map{|b| b.to_i(2)}.join('.')
     end
 
     def cidr_to_binary cidr
-      cidr = normalize cidr
-      ('1'*cidr).ljust(32, '0').scan(/[01]{8}/).join('.')
+      block = normalize cidr
+      ('1'*block).ljust(32, '0').scan(/[01]{8}/).join('.')
+    end
+
+    def cidr_to_wildcard cidr
+      block = normalize cidr
+      ('0'*block).ljust(32, '1').scan(/[01]{8}/).join('.')
     end
 
     def cidr_to_hosts cidr
-      cidr = normalize cidr
-      return 1 if cidr == 32
+      return 1 if cidr.match %r{/32$}
       binary = cidr_to_binary cidr
       (2**binary.scan('0').size) - 2
     end
 
     private
     def normalize cidr
-      cidr = cidr.split('/').last.to_i if cidr.respond_to?('split')
-      if 8 > cidr || cidr > 32 || cidr == 31
-        raise InvalidCIDRException.new "#{cidr} is an invalid CIDR address"
+      block = cidr.split('/').last.to_i
+      if 8 > block || block > 32
+        raise InvalidCIDRException.new "#{block} is an invalid CIDR address"
       else
-        cidr
+        block
       end
     end
 
   end
 
   class InvalidCIDRException < Exception
-
   end
 end
