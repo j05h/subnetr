@@ -23,7 +23,7 @@ module Subnetr
     private
     def normalize cidr
       cidr = cidr.split('/').last.to_i if cidr.respond_to?('split')
-      if 8 > cidr || cidr > 32
+      if 8 > cidr || cidr > 32 || cidr == 31
         raise InvalidCIDRException.new "#{cidr} is an invalid CIDR address"
       else
         cidr
