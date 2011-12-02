@@ -5,12 +5,24 @@ require 'lib/subnetr'
 describe Subnetr do
 
   before do
-    @s = Subnetr::Calc.new
+    @s       = Subnetr::Calc.new
   end
 
-  describe "/32" do
+  describe "slash 32" do
     before do
       @s = Subnetr::Calc.new "192.168.0.1/32"
+    end
+
+    it "has a valid binary subnet mask" do
+      @s.binary_netmask.must_equal '11111111.11111111.11111111.11111111'
+    end
+
+    it "has a valid subnet mask" do
+      @s.netmask.must_equal '255.255.255.255'
+    end
+
+    it "has a valid number of hosts" do
+      @s.hosts.must_equal 1
     end
   end
 
