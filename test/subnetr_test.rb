@@ -23,6 +23,10 @@ describe Subnetr do
       end.must_raise(Subnetr::InvalidCIDRException)
 
       lambda do
+        @s.cidr_to_netmask('/31')
+      end.must_raise(Subnetr::InvalidCIDRException)
+
+      lambda do
         @s.cidr_to_netmask(0)
       end.must_raise(Subnetr::InvalidCIDRException)
     end
