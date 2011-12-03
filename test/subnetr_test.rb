@@ -90,12 +90,7 @@ describe Subnetr do
     end
 
     it "has a proper ip range" do
-      @s.ip_range.must_equal [
-        "192.168.0.1" , "192.168.0.2"  , "192.168.0.3" , "192.168.0.4" ,
-        "192.168.0.5" , "192.168.0.6"  , "192.168.0.7" , "192.168.0.8" ,
-        "192.168.0.9" , "192.168.0.10" , "192.168.0.11", "192.168.0.12",
-        "192.168.0.13", "192.168.0.14"
-      ]
+      @s.ip_range.must_equal ["192.168.0.1", "192.168.0.14"]
     end
   end
 
@@ -115,19 +110,19 @@ describe Subnetr do
     end
 
     it "can convert /32 to binary" do
-      @s.cidr_to_binary('/32').must_equal '11111111.11111111.11111111.11111111'
+      @s.cidr_to_netmask('/32').must_equal '11111111.11111111.11111111.11111111'
     end
 
     it "can convert /30 to binary" do
-      @s.cidr_to_binary('/30').must_equal '11111111.11111111.11111111.11111100'
+      @s.cidr_to_netmask('/30').must_equal '11111111.11111111.11111111.11111100'
+    end
+
+    it "can convert /8 to binary" do
+      @s.cidr_to_netmask('/8').must_equal '11111111.00000000.00000000.00000000'
     end
 
     it "can convert /30 to wildcard" do
       @s.cidr_to_wildcard('/30').must_equal '00000000.00000000.00000000.00000011'
-    end
-
-    it "can convert /8 to binary" do
-      @s.cidr_to_binary('/8').must_equal '11111111.00000000.00000000.00000000'
     end
 
     it "can convert /8 to wildcard" do
